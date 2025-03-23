@@ -1,2 +1,8 @@
 This project was forked from the beepcore-java project originally hosted on 
 sourceforge at: http://sourceforge.net/projects/beepcore-java/
+
+#TODO
+Add support to java 8
+Add more examples
+Add better documentation 
+Add support for new TLS implementation TLS1.2 and TLS1.3
