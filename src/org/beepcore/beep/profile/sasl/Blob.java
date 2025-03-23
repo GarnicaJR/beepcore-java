@@ -18,13 +18,11 @@
 package org.beepcore.beep.profile.sasl;
 
 import java.io.IOException;
+import java.util.Base64;
 
 import javax.xml.parsers.*;
 
 import org.w3c.dom.*;
-
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -72,8 +70,6 @@ public class Blob
 
     // Class data
     private static String statusMappings[];
-    private static BASE64Decoder decoder;
-    private static BASE64Encoder encoder;
     private static boolean initialized = false;
     
     // Data
@@ -180,7 +176,7 @@ public class Blob
                 java.lang.RuntimeException("UTF-8 encoding not supported");
           }
 
-          this.blobData = encoder.encodeBuffer(this.decodedData);
+          this.blobData = new String(Base64.getDecoder().decode(this.decodedData));
         }
 
         StringBuffer buff = new StringBuffer(DEFAULT_BLOB_SIZE);
@@ -237,7 +233,7 @@ public class Blob
         this.status = status;
         if (data != null) {
             this.decodedData = data;
-            this.blobData = encoder.encodeBuffer(data);
+            this.blobData = Base64.getEncoder().encodeToString(data);
         }
         
         StringBuffer buff = new StringBuffer(DEFAULT_BLOB_SIZE);
@@ -305,8 +301,8 @@ public class Blob
         blobData = extractDataFromBlob(blob);
         if (blobData != null) {
             try {
-                decodedData = decoder.decodeBuffer(blobData);
-            } catch (IOException x) {
+                decodedData = Base64.getDecoder().decode(blobData);
+            } catch (Exception x) {
                 throw new SASLException(x.getMessage());
             }
         } else {
@@ -332,13 +328,6 @@ public class Blob
      */
     private static void init() throws SASLException
     {
-        if (decoder == null) {
-            decoder = new BASE64Decoder();
-        }
-
-        if (encoder == null) {
-            encoder = new BASE64Encoder();
-        }
 
         if(statusMappings == null) {
             statusMappings = new String[STATUS_LIMIT];
@@ -505,7 +494,7 @@ public class Blob
         throws SASLException
     {
         try {
-            return new String(encoder.encodeBuffer(data.getBytes()));
+            return new String(Base64.getDecoder().decode(data.getBytes()));
         } catch (Exception x) {
             throw new SASLException("Base64 encode or decode failure");
         }

@@ -18,32 +18,17 @@
  */
 package org.beepcore.beep.core;
 
-
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-
+import java.util.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import sun.misc.BASE64Decoder;
-
 import org.beepcore.beep.profile.tls.TLSProfile;
-
 import org.beepcore.beep.core.event.ChannelEvent;
 import org.beepcore.beep.core.event.ChannelListener;
 import org.beepcore.beep.core.event.SessionEvent;
 import org.beepcore.beep.core.event.SessionResetEvent;
 import org.beepcore.beep.core.event.SessionListener;
-
 import org.beepcore.beep.core.serialize.*;
-
 import org.beepcore.beep.util.StringUtil;
 
 
@@ -1206,8 +1191,8 @@ public abstract class SessionImpl implements Session {
                 byte[] data;
                 if (p.getBase64Encoding()) {
                     try {
-                        data = new BASE64Decoder().decodeBuffer(p.getData());
-                    } catch (IOException e) {
+                        data = Base64.getDecoder().decode(p.getData());
+                    } catch (Exception e) {
                         ch.abort();
                         this.enableIO();
                         throw new BEEPError(BEEPError.CODE_REQUESTED_ACTION_ABORTED,
